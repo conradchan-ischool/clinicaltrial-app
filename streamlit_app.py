@@ -14,13 +14,11 @@ def main():
     )
 
     patient_form = st.form(key="patient")
-    condition = patient_form.text_input("Medical Condition")
+    
     age = patient_form.number_input("Age", 0, 100, 0, 1)
-
-    # sex = st.radio("Sex", ["Male", "Female"])
-    sex = patient_form.radio("Sex", ["Male", "Female", "Both"])
-    allowsHealthy = patient_form.checkbox("Allows healthy people", value=False)
-
+    sex = patient_form.radio("Accepts", ["Females", "Males", "Both"])
+    condition = patient_form.text_input("Medical Condition")
+    acceptsHealthy = patient_form.checkbox("Accepts healthy volunteers", value=False)
     location = patient_form.text_input("Location")
     distance = patient_form.number_input("Miles you are able to travel")
 
@@ -31,7 +29,7 @@ def main():
         patient["condition"] = condition
         patient["age"] = age
         patient["sex"] = sex
-        patient["allowsHealthy"] = allowsHealthy
+        patient["acceptsHealthy"] = acceptsHealthy
         patient["location"] = location
         patient["distance"] = distance
         
