@@ -16,7 +16,7 @@ def main():
     patient_form = st.form(key="patient")
     
     age = patient_form.number_input("Age", 0, 100, 0, 1)
-    sex = patient_form.radio("Sex", ["Females", "Males"])
+    sex = patient_form.radio("Sex", ["Female", "Male"])
     condition = patient_form.text_input("Medical Condition")
     acceptsHealthy = patient_form.checkbox("Accepts healthy volunteers", value=False)
     location = patient_form.text_input("Location")
