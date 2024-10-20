@@ -54,7 +54,7 @@ def show_clinical_trials(json_list):
     Output:
         None
     """
-    for idx, ct in enumerate(ct_results):
+    for idx, ct in enumerate(json_list):
             
             # Show brief title if available, otherwise show official title
             briefTitle_list = find_in_json(ct, "briefTitle")
