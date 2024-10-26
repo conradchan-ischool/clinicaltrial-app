@@ -1,7 +1,9 @@
 import streamlit as st
 from streamlit_searchbox import st_searchbox
 import json
-from difflib import get_close_matches
+# from difflib import get_close_matches
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
 
 def find_in_json(data, key):
     """
@@ -27,7 +29,7 @@ def find_in_json(data, key):
     return values
     
 
-def load_conditions() -> list[str]:
+def load_conditions():
     """
     Load list of medical conditions from a file into global variable CONDITIONS_LIST.
     File should be in same directory as this file.
@@ -53,7 +55,8 @@ def find_conditions(searchTerm: str) -> list[any]:
         List[any]: List of strings that are partial matches, sorted by closeness.
     """
     
-    return get_close_matches(searchTerm, CONDITIONS_LIST)
+    # return get_close_matches(searchTerm, CONDITIONS_LIST)
+    return process.extract(searchTerm, CONDITIONS_LIST)
     
 
 def call_retrieve_trials_API(patient):
