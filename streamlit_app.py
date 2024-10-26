@@ -1,5 +1,7 @@
 import streamlit as st
+from streamlit_searchbox import st_searchbox
 import json
+from difflib import get_close_matches
 
 def find_in_json(data, key):
     """
@@ -24,6 +26,36 @@ def find_in_json(data, key):
      
     return values
     
+
+def load_conditions() -> list[str]:
+    """
+    Load list of medical conditions from a file into global variable CONDITIONS_LIST.
+    File should be in same directory as this file.
+    """
+    global CONDITIONS_LIST
+    CONDITIONS_LIST = []
+    
+    conditions_filename = "conditions.txt"
+    
+    with open(conditions_filename, 'r') as conditions_file:
+        for line in conditions_file:
+            CONDITIONS_LIST.append(line.rstrip())  # Strip out whitespace, newlines
+
+
+def find_conditions(searchTerm: str) -> list[any]:
+    """
+    Takes a string and returns a list of potential matches.
+
+    Args:
+        searchTerm (str): String to match
+
+    Returns:
+        List[any]: List of strings that are partial matches, sorted by closeness.
+    """
+    
+    return get_close_matches(searchTerm, CONDITIONS_LIST)
+    
+
 def call_retrieve_trials_API(patient):
     """
     Call the API to get matching clinical trials.
@@ -44,6 +76,7 @@ def find_trials(patient):
     """
     
     return call_retrieve_trials_API(patient)
+
 
 def show_clinical_trials(json_list):
     """
@@ -77,25 +110,30 @@ def show_clinical_trials(json_list):
     
 def main():
     
+    load_conditions() # Load list of medical conditions user can search from
+    
     st.title("AllTrials.ai")
     st.header("Matching Clinical Trials")
     
-    st.sidebar.title("Search for Clinical Trials")
-    st.sidebar.write(
-        "Enter your information below."
-    )
+    # Enter search criteria in the sidebar
+    with st.sidebar:
+        st.title("Search for Clinical Trials")
+        st.write(
+                    "Enter your information below."
+                )   
+        age = st.number_input("Age", 0, 100, 0, 1)
+        sex = st.radio("Sex", ["Female", "Male"])
+        # condition = st.text_input("Medical Condition")
+        condition = st_searchbox(search_function=find_conditions,
+                                 label="Medical Condition",
+                                 key="condition_searchbox")
+        conditionText = st.text_area("Additional Information")
+        acceptsHealthy = st.checkbox("Accepts healthy volunteers", value=False)
+        location = st.text_input("Location")
+        distance = st.number_input("Miles you are able to travel", 0, 10000, 0, 1)
 
-    # patient_form = st.form(key="patient")
+        submit_button = st.button(label="Find clinical trials")
     
-    age = st.sidebar.number_input("Age", 0, 100, 0, 1)
-    sex = st.sidebar.radio("Sex", ["Female", "Male"])
-    condition = st.sidebar.text_input("Medical Condition")
-    conditionText = st.sidebar.text_area("Additional Information")
-    acceptsHealthy = st.sidebar.checkbox("Accepts healthy volunteers", value=False)
-    location = st.sidebar.text_input("Location")
-    distance = st.sidebar.number_input("Miles you are able to travel", 0, 10000, 0, 1)
-
-    submit_button = st.sidebar.button(label="Find clinical trials")
     if submit_button:
         # Create a dictionary for the patient profile
         patient = {}
@@ -110,7 +148,7 @@ def main():
         ct_results = find_trials(patient)
         
         # Display results
-        st.write(len(ct_results), "clinical trials found.")
+        st.write("We found ", len(ct_results), "clinical trials you might qualify for.")
         show_clinical_trials(ct_results)
                         
         
