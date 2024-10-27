@@ -101,14 +101,26 @@ def show_clinical_trials(json_list):
                 expander_heading = officialTitle_list[0]
             
             with st.expander(expander_heading):
+                # Show either detailed description of brief summary
                 detailedDescription_list = find_in_json(ct, "detailedDescription")
+                briefSummary_list = find_in_json(ct, "briefSummary")
                 if detailedDescription_list:
                     st.text("Detailed Description:")
-                    st.write(find_in_json(ct, "detailedDescription")[0])
+                    st.write(detailedDescription_list[0])
+                elif briefSummary_list:
+                    st.text("Brief Summary:")
+                    st.write(briefSummary_list[0])
+                    
+                # Show eligibility criteria
+                eligibilityCriteria_list = find_in_json(ct, "eligibilityCriteria")
+                if eligibilityCriteria_list:
+                    st.text("Eligibility Criteria:")
+                    st.write(eligibilityCriteria_list[0])
                 
+                # Show link to clinicaltrials.gov
                 nctId = find_in_json(ct,"nctId")[0]
                 url = f"https://clinicaltrials.gov/study/{nctId}"
-                st.markdown("[View in ClinicalTrials.gov website](%s)" % url)
+                st.markdown("[See more details on ClinicalTrials.gov website](%s)" % url)
 
     
 def main():
