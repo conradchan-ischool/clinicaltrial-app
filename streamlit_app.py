@@ -127,7 +127,7 @@ def main():
     
     load_conditions() # Load list of medical conditions user can search from
     
-    st.title("AllTrials.ai")
+    st.title("AllTrials.info")
     st.header("Matching Clinical Trials")
     
     # Enter search criteria in the sidebar
