@@ -1,4 +1,5 @@
 import streamlit as st
+from openai import OpenAI
 from streamlit_searchbox import st_searchbox
 import json
 # from difflib import get_close_matches
